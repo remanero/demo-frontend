@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react"
+import { listarHello } from "./services/helloService";
 
 function App() {
 
   const [dados, setDados] = useState([]);
 
-  useEffect(() => {
-    fetch("http://localhost:8080/hello")
-    .then(res => res.json())
-    .then(data => setDados(data))
+  // useEffect(() => {
+  //   fetch("http://localhost:8080/hello")
+  //   .then(res => res.json())
+  //   .then(data => setDados(data))
+  //   .catch(err => console.error(err));
+  // }, []);
+
+    useEffect(() => {
+    listarHello()
+    .then(response => setDados(response.data))
     .catch(err => console.error(err));
   }, []);
+
   return (
     <div>
       <h1>React + Spring Boot</h1>
