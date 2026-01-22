@@ -1,27 +1,45 @@
 import { useEffect, useState } from "react"
-import { listarHello } from "./services/helloService";
+import { criarHello, listarHello } from "./services/helloService";
 
 function App() {
 
   const [dados, setDados] = useState([]);
+  const [mensagem, setMensagem] = useState("");
 
-  // useEffect(() => {
-  //   fetch("http://localhost:8080/hello")
-  //   .then(res => res.json())
-  //   .then(data => setDados(data))
-  //   .catch(err => console.error(err));
-  // }, []);
 
-    useEffect(() => {
+  function carregarLista() {
     listarHello()
-    .then(response => setDados(response.data))
-    .catch(err => console.error(err));
+      .then(response => setDados(response.data))
+      .catch(err => console.error(err));
+  }
+  useEffect(() => {
+    carregarLista();
   }, []);
+
+  function salvar(e) {
+    e.preventDefault();
+
+    criarHello({ mensagem })
+      .then(() => {
+        setMensagem("");
+        carregarLista();
+      })
+      .catch(err => console.error(err))
+  }
 
   return (
     <div>
       <h1>React + Spring Boot</h1>
 
+      <form onSubmit={salvar}>
+        <input
+          type="text"
+          placeholder="Digite a mensagem"
+          value={mensagem}
+          onChange={e => setMensagem(e.target.value)}
+        />
+        <button type="submit">Salvar</button>
+      </form>
       <ul>
         {dados.map(item => (
           <li key={item.id}>{item.mensagem}</li>
